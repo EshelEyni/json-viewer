@@ -18,7 +18,7 @@ export function JsonNode({ name, path, value }: JsonNodeProps) {
 
   if (typeof value !== 'object') {
     return (
-      <div className="grid min-h-11 grid-cols-[minmax(9rem,0.7fr)_minmax(12rem,1.3fr)] items-center gap-4 rounded-lg px-3 py-1.5 transition-colors hover:bg-slate-50">
+      <div className="grid min-h-11 grid-cols-1 items-center gap-1.5 rounded-lg px-2 py-2 transition-colors hover:bg-slate-50 sm:grid-cols-[minmax(9rem,0.7fr)_minmax(12rem,1.3fr)] sm:gap-4 sm:px-3 sm:py-1.5">
         <span className="truncate font-mono text-sm font-medium text-slate-700" title={name}>
           {name}
         </span>
@@ -53,7 +53,7 @@ export function JsonNode({ name, path, value }: JsonNodeProps) {
       </button>
 
       {!isCollapsed && (
-        <div className="ml-5 border-l border-slate-200 pl-3">
+        <div className="ml-2 border-l border-slate-200 pl-2 sm:ml-5 sm:pl-3">
           {entries.map(([childName, childValue]) => (
             <JsonNode
               key={childName}
