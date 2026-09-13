@@ -1,32 +1,81 @@
-# React + TypeScript + Vite
+# JSON Viewer & Editor
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A React and TypeScript application for browsing and editing a nested JSON object. The interface renders the object recursively, chooses an editor based on each value's type, and keeps data and expansion state in Redux.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Recursive rendering for nested objects
+- Expandable and collapsible object nodes
+- Text inputs for strings
+- Numeric inputs for numbers
+- Color pickers for valid three- and six-digit hex colors
+- Toggles for boolean values
+- Immutable nested updates using property paths
+- Loading and error states for the demo-data request
+- Responsive styling with Tailwind CSS
 
-## React Compiler
+Arrays and `null` values are outside the scope of the supplied dataset. Keys cannot be added, renamed, or deleted.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting started
 
-## Expanding the Oxlint configuration
+Requirements:
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+- Node.js 20.19 or newer
+- npm
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+Install dependencies and start the development server:
+
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Vite prints the local development URL in the terminal.
+
+## Available scripts
+
+```bash
+npm run dev      # Start the Vite development server
+npm run build    # Type-check and create a production build
+npm run lint     # Run Oxlint
+npm run preview  # Preview the production build locally
+```
+
+## Architecture
+
+```text
+src/
+├── components/
+│   ├── JsonNode.tsx         # Recursively renders object nodes and leaves
+│   ├── JsonValueEditor.tsx  # Selects the correct primitive-value editor
+│   └── JsonViewer.tsx       # Loads data and handles request states
+├── data/
+│   └── data.json            # Demo JSON dataset
+├── services/
+│   └── utilService.ts       # Runtime primitive and color detection
+├── store/
+│   ├── hooks.ts             # Typed Redux hooks
+│   ├── jsonSlice.ts         # Data loading, editing, and collapse actions
+│   └── store.ts             # Redux store configuration
+├── App.tsx                  # Application layout
+├── main.tsx                 # React root and Redux provider
+└── types.ts                 # Recursive JSON and path types
+```
+
+### State flow
+
+1. `JsonViewer` dispatches the `loadData` thunk when the application starts.
+2. The thunk resolves the simulated request and stores the JSON object in the `json` slice.
+3. `JsonNode` walks each object recursively and extends a path such as `product.branding.primaryColor`.
+4. `JsonValueEditor` uses runtime type detection to render the appropriate controlled input.
+5. An edit dispatches `updateValue` with the property's path and new primitive value.
+6. Redux Toolkit uses Immer to update the selected leaf while preserving unrelated branches.
+7. Expanding or collapsing an object dispatches `toggleNode`, keeping that UI state in Redux as well.
+
+## Technology
+
+- React 19
+- TypeScript
+- Vite
+- Redux Toolkit and React Redux
+- Tailwind CSS
