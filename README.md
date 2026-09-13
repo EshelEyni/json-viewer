@@ -53,6 +53,8 @@ src/
 │   └── JsonViewer.tsx       # Loads data and handles request states
 ├── data/
 │   └── data.json            # Demo JSON dataset
+├── docs/
+│   └── ai-prompts.md        # Reusable AI prompts and code templates
 ├── services/
 │   └── utilService.ts       # Runtime primitive and color detection
 ├── store/
@@ -63,6 +65,8 @@ src/
 ├── main.tsx                 # React root and Redux provider
 └── types.ts                 # Recursive JSON and path types
 ```
+
+Repository-level AI coding and review rules are documented in [`AGENTS.md`](./AGENTS.md). Reusable prompts and templates are available in [`docs/ai-prompts.md`](./docs/ai-prompts.md).
 
 ### State flow
 
