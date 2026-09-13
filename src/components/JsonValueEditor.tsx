@@ -50,6 +50,11 @@ export function JsonValueEditor({ name, path, value }: JsonValueEditorProps) {
 
   if (valueType === 'number') {
     const handleNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
+      if (event.currentTarget.value === '') {
+        update(0)
+        return
+      }
+
       const nextValue = event.currentTarget.valueAsNumber
 
       if (!Number.isNaN(nextValue)) {

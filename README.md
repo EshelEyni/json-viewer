@@ -38,6 +38,8 @@ Vite prints the local development URL in the terminal.
 npm run dev      # Start the Vite development server
 npm run build    # Type-check and create a production build
 npm run lint     # Run Oxlint
+npm test         # Run the test suite once
+npm run test:watch # Run tests in watch mode
 npm run preview  # Preview the production build locally
 ```
 
