@@ -8,6 +8,7 @@ interface JsonState {
   data: JsonObject | null
   status: LoadingStatus
   error: string | null
+  collapsedPaths: string[]
 }
 
 interface UpdateValuePayload {
@@ -19,6 +20,7 @@ const initialState: JsonState = {
   data: null,
   status: 'idle',
   error: null,
+  collapsedPaths: [],
 }
 
 export const fetchDemoData = (): Promise<JsonObject> =>
@@ -28,12 +30,28 @@ export const fetchDemoData = (): Promise<JsonObject> =>
     }, 300)
   })
 
-export const loadData = createAsyncThunk<JsonObject>('json/loadData', fetchDemoData)
+export const loadData = createAsyncThunk<
+  JsonObject,
+  void,
+  { state: { json: JsonState } }
+>('json/loadData', fetchDemoData, {
+  condition: (_, { getState }) => getState().json.status !== 'loading',
+})
 
 const jsonSlice = createSlice({
   name: 'json',
   initialState,
   reducers: {
+    toggleNode: (state, action: PayloadAction<JsonPath>) => {
+      const pathKey = JSON.stringify(action.payload)
+      const collapsedIndex = state.collapsedPaths.indexOf(pathKey)
+
+      if (collapsedIndex === -1) {
+        state.collapsedPaths.push(pathKey)
+      } else {
+        state.collapsedPaths.splice(collapsedIndex, 1)
+      }
+    },
     updateValue: (state, action: PayloadAction<UpdateValuePayload>) => {
       if (!state.data || action.payload.path.length === 0) {
         return
@@ -79,5 +97,5 @@ const jsonSlice = createSlice({
   },
 })
 
-export const { updateValue } = jsonSlice.actions
+export const { toggleNode, updateValue } = jsonSlice.actions
 export default jsonSlice.reducer
